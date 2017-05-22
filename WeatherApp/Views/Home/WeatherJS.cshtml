@@ -9,15 +9,16 @@
     Current Longitude: <span id="long"></span>
 </p>
 <p>
-    <p id="reply">City</p> 
-	<p id="temp">Temperature</p>
-	<p id="humid">Humidity</p>
+    City: <span id="reply" style="font-weight: bold;"></span><br /> 
+	Temperature: <span id="temp" style="font-weight: bold;"></span> F<br /> 
+	Humidity: <span id="humid" style="font-weight: bold;"></span><br /> 
+    Wind Speed: <span id="wind" style="font-weight: bold;"></span> 
 </p>
 <br />
 <input id="citySearch" />
 <button>Get Weather!</button><br />
 
-<div id="jsGrid"></div>
+<div id="jsGrid" style="margin-top:45px;"></div>
 
 
 <script>
@@ -34,8 +35,39 @@
         var denverWeather = 
         $.get("http://api.openweathermap.org/data/2.5/weather?q=Denver&APPID=b885650de0f3affccf9d24305410338e&units=imperial", 
 			function(response){
-                $(".jsgrid-row:first-child>.jsgrid-align-right").text(response.main.temp);
+                $(".jsgrid-row:first-child>td:nth-child(2)").text(response.main.temp);
+                $(".jsgrid-row:first-child>td:nth-child(3)").text(response.wind.speed);
             });
+
+       var londonWeather = 
+        $.get("http://api.openweathermap.org/data/2.5/weather?q=Philadelphia&APPID=b885650de0f3affccf9d24305410338e&units=imperial", 
+			function(response){
+                $("tr:nth-child(2)>td:nth-child(2)").text(response.main.temp);
+                $("tr:nth-child(2)>td:nth-child(3)").text(response.wind.speed);
+            });
+
+      var helsinkiWeather = 
+        $.get("http://api.openweathermap.org/data/2.5/weather?q=Helsinki&APPID=b885650de0f3affccf9d24305410338e&units=imperial", 
+			function(response){
+                $("tr:nth-child(3)>td:nth-child(2)").text(response.main.temp);
+                $("tr:nth-child(3)>td:nth-child(3)").text(response.wind.speed);
+            });
+
+     
+      var berlinWeather = 
+        $.get("http://api.openweathermap.org/data/2.5/weather?q=Berlin&APPID=b885650de0f3affccf9d24305410338e&units=imperial", 
+			function(response){
+                $("tr:nth-child(4)>td:nth-child(2)").text(response.main.temp);
+                $("tr:nth-child(4)>td:nth-child(3)").text(response.wind.speed);
+            });  
+
+      
+      var albertaWeather = 
+        $.get("http://api.openweathermap.org/data/2.5/weather?q=Helsinki&APPID=b885650de0f3affccf9d24305410338e&units=imperial", 
+			function(response){
+                $("tr:nth-child(5)>td:nth-child(2)").text(response.main.temp);
+                $("tr:nth-child(5)>td:nth-child(3)").text(response.wind.speed);
+            });   
 
 
 	    $("button").click(function(){
@@ -46,15 +78,16 @@
 	            $("#reply").text(response.name);
 			    $("#temp").text(response.main.temp);
 	            $("#humid").text(response.main.humidity); 
+                $("#wind").text(response.wind.speed);
 			});  
 	    });
 	
     var cities = [
-        { "City": "Denver", "Temperature": "", "Country": 1, "Address": "Ap #897-1459 Quam Avenue", "Married": false },
-        { "City": "Connor Johnston", "Temperature": 45, "Country": 2, "Address": "Ap #370-4647 Dis Av.", "Married": true },
-        { "City": "Lacey Hess", "Temperature": 29, "Country": 3, "Address": "Ap #365-8835 Integer St.", "Married": false },
-        { "City": "Timothy Henson", "Temperature": 56, "Country": 1, "Address": "911-5143 Luctus Ave", "Married": true },
-        { "City": "Ramona Benton", "Temperature": 32, "Country": 5, "Address": "Ap #614-689 Vehicula Street", "Married": false }
+        { "City": "Denver", "Temperature": "Error", "Wind Speed": "", "Country": 1, "Married": false },
+        { "City": "London", "Temperature": "", "Wind Speed": "", "Country": 3, "Married": true },
+        { "City": "Helsinki", "Temperature": "", "Wind Speed": "", "Country": 4, "Married": false },
+        { "City": "Berlin", "Temperature": "", "Wind Speed": "", "Country": 5, "Married": true },
+        { "City": "Alberta", "Temperature": "", "Wind Speed": "", "Country": 2, "Married": false }
     ];
  
     var countries = [
@@ -62,8 +95,8 @@
         { Name: "United States", Id: 1 },
         { Name: "Canada", Id: 2 },
         { Name: "United Kingdom", Id: 3 },
-	    { Name: "France", Id: 4},
-	    { Name: "Germany", Id: 5}
+	    { Name: "Finland", Id: 4},
+	    { Name: "Germany", Id: 5},
     ];
  
     $("#jsGrid").jsGrid({
@@ -79,8 +112,8 @@
  
         fields: [
             { name: "City", type: "text", width: 100, validate: "required" },
-            { name: "Temperature (F)", type: "number", width: 70 }, 
-            { name: "Address", type: "text", width: 200 },
+            { name: "Temperature (F)", type: "number", width: 40 }, 
+            { name: "Wind Speed", type: "number", width: 40 },
             { name: "Country", type: "select", items: countries, valueField: "Id", textField: "Name" },
             { name: "Married", type: "checkbox", title: "Is Married", sorting: false },
             { type: "control" }
