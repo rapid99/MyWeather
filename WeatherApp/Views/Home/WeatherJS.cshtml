@@ -1,0 +1,91 @@
+﻿@{
+    ViewBag.Title = "WeatherJS";
+}
+
+<h2>WeatherApp</h2>
+
+<p style="float:right; font-size: 18px;">
+    Current Latitude: <span id="lat"></span><br />
+    Current Longitude: <span id="long"></span>
+</p>
+<p>
+    <p id="reply">City</p> 
+	<p id="temp">Temperature</p>
+	<p id="humid">Humidity</p>
+</p>
+<br />
+<input id="citySearch" />
+<button>Get Weather!</button><br />
+
+<div id="jsGrid"></div>
+
+
+<script>
+	$(document).ready(function(){
+
+        function getLocation() {
+            navigator.geolocation.getCurrentPosition(function(location) {
+                $("#lat").text(location.coords.latitude);
+                $("#long").text(location.coords.longitude);
+            });
+        };
+        getLocation();
+		
+        var denverWeather = 
+        $.get("http://api.openweathermap.org/data/2.5/weather?q=Denver&APPID=b885650de0f3affccf9d24305410338e&units=imperial", 
+			function(response){
+                $(".jsgrid-row:first-child>.jsgrid-align-right").text(response.main.temp);
+            });
+
+
+	    $("button").click(function(){
+	        var citySearch = $("#citySearch").val();
+		    $.get("http://api.openweathermap.org/data/2.5/weather?q=" + citySearch + "&APPID=b885650de0f3affccf9d24305410338e&units=imperial", 
+			function(response){ 
+	            console.log(response);
+	            $("#reply").text(response.name);
+			    $("#temp").text(response.main.temp);
+	            $("#humid").text(response.main.humidity); 
+			});  
+	    });
+	
+    var cities = [
+        { "City": "Denver", "Temperature": "", "Country": 1, "Address": "Ap #897-1459 Quam Avenue", "Married": false },
+        { "City": "Connor Johnston", "Temperature": 45, "Country": 2, "Address": "Ap #370-4647 Dis Av.", "Married": true },
+        { "City": "Lacey Hess", "Temperature": 29, "Country": 3, "Address": "Ap #365-8835 Integer St.", "Married": false },
+        { "City": "Timothy Henson", "Temperature": 56, "Country": 1, "Address": "911-5143 Luctus Ave", "Married": true },
+        { "City": "Ramona Benton", "Temperature": 32, "Country": 5, "Address": "Ap #614-689 Vehicula Street", "Married": false }
+    ];
+ 
+    var countries = [
+        { Name: "", Id: 0 },
+        { Name: "United States", Id: 1 },
+        { Name: "Canada", Id: 2 },
+        { Name: "United Kingdom", Id: 3 },
+	    { Name: "France", Id: 4},
+	    { Name: "Germany", Id: 5}
+    ];
+ 
+    $("#jsGrid").jsGrid({
+        width: "100%",
+        height: "250px",
+ 
+        inserting: true,
+        editing: true,
+        sorting: true,
+        paging: true,
+ 
+        data: cities,
+ 
+        fields: [
+            { name: "City", type: "text", width: 100, validate: "required" },
+            { name: "Temperature (F)", type: "number", width: 70 }, 
+            { name: "Address", type: "text", width: 200 },
+            { name: "Country", type: "select", items: countries, valueField: "Id", textField: "Name" },
+            { name: "Married", type: "checkbox", title: "Is Married", sorting: false },
+            { type: "control" }
+        ]
+
+    });
+	});
+</script>
