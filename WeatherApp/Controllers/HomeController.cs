@@ -32,5 +32,10 @@ namespace WeatherApp.Controllers
         {
             return View();
         }
+
+        public IActionResult CurrentWeather()
+        {
+            return View();
+        }
     }
 }
